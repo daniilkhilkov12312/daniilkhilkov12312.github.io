@@ -94,3 +94,22 @@ body {
 @keyframes snowFall {
   to { transform: translateY(140px); }
 }
+.night {
+  background: linear-gradient(180deg, #0b0c28, #1a1b3c);
+  overflow: hidden;
+}
+
+.night .star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.2; }
+  to { opacity: 1; }
+}
