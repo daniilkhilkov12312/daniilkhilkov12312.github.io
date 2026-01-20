@@ -1,86 +1,109 @@
-// координаты Нэводари
 const lat = 44.3167;
 const lon = 28.6;
-
-// находим виджет
 const widget = document.getElementById("widget");
 
-// fetch для Open-Meteo
-fetch("https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current_weather=true")
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(data) {
-    const temp = Math.round(data.current_weather.temperature);
-    const code = data.current_weather.weathercode;
+// элементы декоративные
+const sunEl = document.getElementById("sun");
+const cloudEl = document.getElementById("clouds");
+const lightningEl = document.getElementById("lightning");
 
-    document.getElementById("temp").innerText = temp + "°C";
+function updateTime() {
+  const now = new Date();
+  const hour = now.getHours();
+  const min = now.getMinutes().toString().padStart(2,'0');
+  const sec = now.getSeconds().toString().padStart(2,'0');
 
-    let type = "clear";
-    let text = "Ясно";
+  document.getElementById("time").innerText = ${hour}:${min}:${sec};
 
-    if ([1,2,3].includes(code)) {
-      type = "clouds";
-      text = "Облачно";
-    }
+  if (hour >= 19 || hour < 6) {
+    widget.classList.add("night");
+    if (!document.querySelectorAll(".star").length) createStars(50);
+  } else {
+    widget.classList.remove("night");
+  }
+}
 
-    if ([51,53,55,61,63,65].includes(code)) {
-      type = "rainy";
-      text = "Дождь";
-      makeRain();
-    }
+function createStars(count) {
+  for(let i=0;i<count;i++){
+    const star = document.createElement("div");
+    star.className="star";
+    star.style.left=Math.random()*100+"%";
+    star.style.top=Math.random()*100+"%";
+    star.style.animationDuration=(1+Math.random()*2)+"s";
+    widget.appendChild(star);
+  }
+}
 
-    if ([71,73,75].includes(code)) {
-      type = "snowy";
-      text = "Снег";
-      makeSnow();
-    }
+setInterval(updateTime,1000);
+updateTime();
 
-    widget.className = "widget " + type;
-    document.getElementById("desc").innerText = text;
-  })
-  .catch(function(err){
-    console.log("Ошибка fetch:", err);
-    document.getElementById("desc").innerText = "Ошибка загрузки";
-  });
+// Fetch погоды
+fetch("https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&current_weather=true")
+.then(r=>r.json())
+.then(data=>{
+  const temp = Math.round(data.current_weather.temperature);
+  const code = data.current_weather.weathercode;
 
-// функции генерации дождя
-function makeRain() {
-  for (let i = 0; i < 25; i++) {
-    const d = document.createElement("div");
-    d.className = "rain";
-    d.style.left = Math.random() * 100 + "%";
-    d.style.animationDuration = 0.5 + Math.random() + "s";
+  document.getElementById("temp").innerText = temp+"°C";
+
+  let type="clear";
+  let text="Ясно";
+
+  // Сброс декоративных элементов
+  sunEl.style.display="none";
+  cloudEl.style.display="none";
+  lightningEl.style.display="none";
+
+  if([1,2,3].includes(code)){
+    type="clear";
+    text="Ясно";
+    sunEl.style.display="block";
+  }
+  if([45,48].includes(code)){ // облачно
+    type="clouds";
+    text="Облачно";
+    cloudEl.style.display="block";
+  }
+  if([51,53,55,61,63,65,95,96,99].includes(code)){ // дождь и гроза
+    type="rainy";
+    text="Гроза";
+    cloudEl.style.display="block";
+    lightningEl.style.display="block";
+    makeRain();
+  }
+  if([71,73,75,77,85,86].includes(code)){ // снег
+    type="snowy";
+    text="Снег";
+    cloudEl.style.display="block";
+    makeSnow();
+  }
+
+  widget.className="widget "+type;
+  document.getElementById("desc").innerText=text;
+})
+.catch(err=>{
+  console.log("Ошибка fetch:",err);
+  document.getElementById("desc").innerText="Ошибка загрузки";
+});
+
+// Дождь
+function makeRain(){
+  for(let i=0;i<25;i++){
+    const d=document.createElement("div");
+    d.className="rain";
+    d.style.left=Math.random()*100+"%";
+    d.style.animationDuration=0.5+Math.random()+"s";
     widget.appendChild(d);
   }
 }
 
-// функции генерации снега
-function makeSnow() {
-  for (let i = 0; i < 18; i++) {
-    const s = document.createElement("div");
-    s.className = "snow";
-    s.style.left = Math.random() * 100 + "%";
-    s.style.animationDuration = 3 + Math.random() * 3 + "s";
+// Снег
+function makeSnow(){
+  for(let i=0;i<18;i++){
+    const s=document.createElement("div");
+    s.className="snow";
+    s.style.left=Math.random()*100+"%";
+    s.style.animationDuration=3+Math.random()*3+"s";
     widget.appendChild(s);
-  }
-}
-const now = new Date();
-const hour = now.getHours(); // 0-23
-
-// Если ночь (например 19:00 - 6:00)
-if (hour >= 19 || hour < 6) {
-  widget.classList.add("night");
-  createStars(50); // создаём 50 звёзд
-}
-
-function createStars(count) {
-  for (let i = 0; i < count; i++) {
-    const star = document.createElement("div");
-    star.className = "star";
-    star.style.left = Math.random() * 100 + "%";
-    star.style.top = Math.random() * 100 + "%";
-    star.style.animationDuration = (1 + Math.random() * 2) + "s"; // разное мерцание
-    widget.appendChild(star);
   }
 }
