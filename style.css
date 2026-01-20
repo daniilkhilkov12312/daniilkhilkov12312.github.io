@@ -1,55 +1,58 @@
-/* Общие настройки */
-body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #0c1220;
-  font-family: Arial, sans-serif;
+body{
+  margin:0;
+  padding:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#0c1220;
+  font-family:Arial,sans-serif;
 }
 
-#widget {
-  width: 400px;
-  padding: 30px;
-  border-radius: 20px;
-  background: linear-gradient(180deg, #4facfe, #00f2fe);
-  color: white;
-  text-align: center;
-  box-shadow: 0 6px 25px rgba(0,0,0,0.5);
-  position: relative;
-  overflow: hidden;
+#widget{
+  width:450px;
+  padding:35px;
+  border-radius:22px;
+  background:linear-gradient(180deg,#4facfe,#00f2fe);
+  color:white;
+  text-align:center;
+  box-shadow:0 8px 30px rgba(0,0,0,0.5);
+  position:relative;
+  overflow:hidden;
 }
 
-.city { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
-#coords { font-size: 14px; opacity: 0.8; margin-bottom: 10px; }
-#temp { font-size: 60px; font-weight: bold; margin-bottom: 10px; animation: float 2s ease-in-out infinite; }
-#desc { font-size: 18px; opacity: 0.9; margin-bottom: 10px; }
-#time { font-size: 20px; margin-bottom: 10px; opacity: 0.9; font-weight: bold; }
+.city{font-size:30px;font-weight:bold;margin-bottom:6px;}
+#coords{font-size:16px;opacity:0.8;margin-bottom:8px;}
+#temp{font-size:70px;font-weight:bold;margin:8px 0;}
+#desc{font-size:20px;opacity:0.9;margin-bottom:10px;}
+#time{font-size:22px;margin-bottom:10px;}
 
-/* Анимация температуры */
-@keyframes float { 0%{transform:translateY(0);} 50%{transform:translateY(-8px);} 100%{transform:translateY(0);} }
+/* Анимация float */
+@keyframes float{0%{transform:translateY(0);}50%{transform:translateY(-8px);}100%{transform:translateY(0);}}
+#temp{animation:float 2s ease-in-out infinite;}
 
-/* Декорации */
-.sun { width:70px; height:70px; background:yellow; border-radius:50%; box-shadow:0 0 40px 15px yellow; position:absolute; top:10px; right:10px; display:none; animation:rotateSun 10s linear infinite; }
-@keyframes rotateSun { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+/* Солнце */
+.sun{width:80px;height:80px;background:yellow;border-radius:50%;box-shadow:0 0 45px 18px yellow;position:absolute;top:10px;right:10px;display:none;animation:rotateSun 10s linear infinite;}
+@keyframes rotateSun{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
-.clouds { position:absolute; width:100px; height:50px; background:white; border-radius:50%; top:20px; left:50px; opacity:0.6; display:none; }
-.lightning { position:absolute; width:6px; height:60px; background:yellow; top:20px; left:120px; display:none; animation:flash 1s infinite; }
-@keyframes flash { 0%,50%,100%{opacity:0} 25%,75%{opacity:1} }
+/* Облака */
+.clouds{position:absolute;width:120px;height:60px;background:white;border-radius:50%;top:25px;left:60px;opacity:0.6;display:none;}
+
+/* Молнии */
+.lightning{position:absolute;width:7px;height:65px;background:yellow;top:25px;left:140px;display:none;animation:flash 1s infinite;}
+@keyframes flash{0%,50%,100%{opacity:0}25%,75%{opacity:1}}
 
 /* Дождь */
-.rain { position:absolute; top:-20px; width:2px; height:14px; background:rgba(255,255,255,0.6); animation:rainFall linear infinite; }
-@keyframes rainFall { to{ transform:translateY(140px); opacity:0; } }
+.rain{position:absolute;top:-20px;width:2px;height:16px;background:rgba(255,255,255,0.6);animation:rainFall linear infinite;}
+@keyframes rainFall{to{transform:translateY(160px);opacity:0;}}
 
 /* Снег */
-.snow { position:absolute; top:-10px; width:8px; height:8px; background:white; border-radius:50%; animation:snowFall linear infinite; }
-@keyframes snowFall { to{ transform:translateY(160px); } }
+.snow{position:absolute;top:-10px;width:9px;height:9px;background:white;border-radius:50%;animation:snowFall linear infinite;}
+@keyframes snowFall{to{transform:translateY(180px);}}
 
 /* Звёзды */
-.star { position:absolute; width:3px; height:3px; background:white; border-radius:50%; opacity:0.8; animation:twinkle 2s infinite alternate; }
-@keyframes twinkle { from{opacity:0.2} to{opacity:1} }
+.star{position:absolute;width:3px;height:3px;background:white;border-radius:50%;opacity:0.8;animation:twinkle 2s infinite alternate;}
+@keyframes twinkle{from{opacity:0.2;}to{opacity:1;}}
 
 /* Ночной фон */
-#widget.night { background: linear-gradient(180deg, #0a0a2e, #0c0c1f); }
+#widget.night{background:linear-gradient(180deg,#0a0a2e,#0c0c1f);}
