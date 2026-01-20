@@ -1,4 +1,4 @@
-/* Общий фон и центр */
+
 body {
   margin: 0;
   padding: 0;
@@ -7,43 +7,56 @@ body {
   justify-content: center;
   align-items: center;
   font-family: Arial, sans-serif;
-  background: #0c1220;
-  color: white;
+  background: linear-gradient(to top, #0c1220, #1a1a40);
   transition: background 1s ease;
+  color: white;
 }
 
-/* Виджет */
 .weather-widget {
+  position: relative;
+  z-index: 1;
+}
+
+/* Экранчик */
+.screen {
+  background: rgba(0,0,0,0.6);
+  padding: 40px 60px;
+  border-radius: 25px;
+  box-shadow: 0 0 30px rgba(0,255,255,0.5);
   text-align: center;
-  background: rgba(0,0,0,0.5);
-  padding: 30px 40px;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
-.weather-widget h1 {
-  font-size: 28px;
+/* Заголовок */
+.screen h1 {
+  font-size: 2.2em;
   margin-bottom: 10px;
+  text-shadow: 0 0 10px #00f2fe;
 }
 
-.info div {
-  margin: 5px 0;
-}
-
-#temp {
-  font-size: 60px;
+/* Температура */
+.temperature {
+  font-size: 4em;
   font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 0 0 20px #4facfe;
+  transition: text-shadow 1s ease;
 }
 
-#desc {
-  font-size: 20px;
+/* Описание */
+.description {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+  text-shadow: 0 0 10px #00f2fe;
+  transition: text-shadow 1s ease;
 }
 
-#time {
-  font-size: 18px;
+/* Время */
+.time {
+  font-size: 1.2em;
+  text-shadow: 0 0 10px #00f2fe;
 }
 
-/* Canvas анимации будет под контейнером */
+/* Canvas для анимаций */
 #weather-canvas {
   pointer-events: none;
   position: fixed;
