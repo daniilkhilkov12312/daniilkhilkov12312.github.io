@@ -2,15 +2,21 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Погода — Нэводари</title>
+<title>Виджет погоды Нэводари</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="widget" class="widget clear">
+<div id="widget">
   <div class="city">Нэводари</div>
-  <div id="temp" class="temp">--°C</div>
-  <div id="desc" class="desc">Загрузка...</div>
-  <div id="time" class="time">--:--:--</div>
+  <div id="coords">44.3167°N, 28.6°E</div>
+  <div id="datetime">
+    <span id="date">--.--.----</span> | <span id="day">----</span>
+  </div>
+  <div id="temp">--°C</div>
+  <div id="desc">Загрузка...</div>
+  <div id="time">--:--:--</div>
+  <div id="source">Источник: Open-Meteo</div>
   
   <!-- Декорации для анимаций -->
   <div id="sun" class="sun"></div>
@@ -18,24 +24,6 @@
   <div id="lightning" class="lightning"></div>
 </div>
 
-<script>
-// координаты Нэводари
-const lat = 44.3167;
-const lon = 28.6;
-
-// запрос температуры
-fetch(https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true)
-  .then(response => response.json())
-  .then(data => {
-    const temp = Math.round(data.current_weather.temperature);
-    document.getElementById("temp").innerText = temp + "°C";
-    document.getElementById("desc").innerText = "Погода обновлена";
-  })
-  .catch(err => {
-    document.getElementById("desc").innerText = "Ошибка загрузки";
-    console.log("Ошибка fetch:", err);
-  });
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
