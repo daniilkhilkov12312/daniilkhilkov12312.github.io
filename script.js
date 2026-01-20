@@ -1,20 +1,50 @@
+
 const tempEl = document.getElementById("temp");
 const descEl = document.getElementById("desc");
 const timeEl = document.getElementById("time");
 const body = document.body;
 
-// Очистка анимаций
+// Удаление старого canvas
 function clearCanvas(){
   const c = document.getElementById("weather-canvas");
-  if (c) c.remove();
+  if(c) c.remove();
 }
 
-// Создать canvas
+// Создание canvas
 function makeCanvas(){
   const cv = document.createElement("canvas");
   cv.id = "weather-canvas";
   document.body.appendChild(cv);
   return cv.getContext("2d");
+}
+
+// Звезды
+function starsAnim(){
+  const ctx = makeCanvas();
+  const canvas = ctx.canvas;
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  const stars = [];
+  for(let i=0;i<200;i++){
+    stars.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: Math.random()*1.5+0.5,
+      twinkle: Math.random()
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = "white";
+    stars.forEach(s=>{
+      ctx.globalAlpha = 0.5 + 0.5*Math.sin(Date.now()/500 + s.twinkle*10);
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
 }
 
 // Дождь
@@ -32,13 +62,13 @@ function rainAnim(){
     ctx.strokeStyle = "rgba(174,194,224,0.5)";
     ctx.lineWidth = 1;
     ctx.lineCap = "round";
-    drops.forEach(d => {
+    drops.forEach(d=>{
       ctx.beginPath();
-      ctx.moveTo(d.x, d.y);
-      ctx.lineTo(d.x, d.y+d.l);
+      ctx.moveTo(d.x,d.y);
+      ctx.lineTo(d.x,d.y+d.l);
       ctx.stroke();
       d.y += d.s;
-      if(d.y > canvas.height) d.y = -20;
+      if(d.y>canvas.height) d.y=-20;
     });
     requestAnimationFrame(draw);
   }
@@ -63,7 +93,7 @@ function snowAnim(){
       ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
       ctx.fill();
       f.y += f.s;
-      if(f.y>canvas.height) f.y = -5;
+      if(f.y>canvas.height) f.y=-5;
     });
     requestAnimationFrame(draw);
   }
@@ -80,7 +110,7 @@ function updateTime(){
 setInterval(updateTime,1000);
 updateTime();
 
-// Погода с wttr.in
+// Погода
 function updateWeather(){
   fetch("https://wttr.in/Nevodari?format=j1")
     .then(r=>r.json())
@@ -89,45 +119,45 @@ function updateWeather(){
       if(!cur) return;
 
       const temp = cur.temp_C;
-      const iconDesc = cur.weatherDesc[0].value.toLowerCase();
+      const desc = cur.weatherDesc[0].value.toLowerCase();
 
-      tempEl.innerText = temp + "°C";
+      tempEl.innerText = temp+"°C";
       descEl.innerText = cur.weatherDesc[0].value;
 
       clearCanvas();
 
-      // Фон + подсветка экрана
-      if(iconDesc.includes("sun") || iconDesc.includes("ясно")){
-        body.style.background = "linear-gradient(to top, #4facfe, #00f2fe)";
-        setGlow("#fff700"); // желтая подсветка
-      } else if(iconDesc.includes("cloud") || iconDesc.includes("облачно")){
-        body.style.background = "linear-gradient(to top, #bdc3c7, #2c3e50)";
-        setGlow("#b0c4de"); // голубая подсветка
-      } else if(iconDesc.includes("rain") || iconDesc.includes("дождь")){
-        body.style.background = "linear-gradient(to top, #4e5d6c, #1c1c1c)";
-        setGlow("#87cefa"); // светлая подсветка
+      // Фон и подсветка
+      if(desc.includes("sun") || desc.includes("ясно")){
+        body.style.background="linear-gradient(to top,#0b3d91,#58a0ff)";
+        starsAnim();
+        setGlow("#fff700");
+      } else if(desc.includes("cloud") || desc.includes("облачно")){
+        body.style.background="linear-gradient(to top,#888,#444)";
+        setGlow("#b0c4de");
+      } else if(desc.includes("rain") || desc.includes("дождь")){
+        body.style.background="linear-gradient(to top,#4e5d6c,#1c1c1c)";
         rainAnim();
-      } else if(iconDesc.includes("snow") || iconDesc.includes("снег")){
-        body.style.background = "linear-gradient(to top, #a8c0ff, #3f2b96)";
-        setGlow("#ffffff"); // белая подсветка
+        setGlow("#87cefa");
+      } else if(desc.includes("snow") || desc.includes("снег")){
+        body.style.background="linear-gradient(to top,#a8c0ff,#3f2b96)";
         snowAnim();
-      } else if(iconDesc.includes("storm") || iconDesc.includes("гроза")){
-        body.style.background = "linear-gradient(to top, #2c3e50, #000000)";
-        setGlow("#ffcc00"); // желто-оранжевая подсветка
+        setGlow("#ffffff");
+      } else if(desc.includes("storm") || desc.includes("гроза")){
+        body.style.background="linear-gradient(to top,#2c3e50,#000000)";
         rainAnim();
+        setGlow("#ffcc00");
       } else {
-        body.style.background = "linear-gradient(to top, #bdc3c7, #2c3e50)";
+        body.style.background="linear-gradient(to top,#0c1220,#1a1a40)";
+        starsAnim();
         setGlow("#ffffff");
       }
-    })
-    .catch(e=>console.log("Ошибка погоды:", e));
+    }).catch(e=>console.log("Ошибка погоды:", e));
 }
 
 // Подсветка текста
 function setGlow(color){
-  const elems = document.querySelectorAll(".temperature, .description, .time, h1");
-  elems.forEach(el=>{
-    el.style.textShadow = `0 0 15px ${color}, 0 0 30px ${color}`;
+  document.querySelectorAll("#temp,#desc,#time,h1").forEach(el=>{
+    el.style.textShadow=`0 0 15px ${color},0 0 30px ${color}`;
   });
 }
 
