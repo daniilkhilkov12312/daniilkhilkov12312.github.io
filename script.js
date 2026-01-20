@@ -21,20 +21,20 @@ fetch(https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&cu
     if ([51,53,55,61,63,65].includes(code)) {
       type = "rainy";
       text = "Дождь";
-      rain();
+      makeRain();
     }
 
     if ([71,73,75].includes(code)) {
       type = "snowy";
       text = "Снег";
-      snow();
+      makeSnow();
     }
 
     widget.className = "widget " + type;
     document.getElementById("desc").innerText = text;
   });
 
-function rain() {
+function makeRain() {
   for (let i = 0; i < 25; i++) {
     const d = document.createElement("div");
     d.className = "rain";
@@ -44,7 +44,7 @@ function rain() {
   }
 }
 
-function snow() {
+function makeSnow() {
   for (let i = 0; i < 18; i++) {
     const s = document.createElement("div");
     s.className = "snow";
