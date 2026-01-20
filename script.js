@@ -1,124 +1,164 @@
+// Элементы на странице
+const tempEl = document.getElementById('temp');
+const descEl = document.getElementById('desc');
+const body = document.body;
+
 // Координаты Нэводари
-const lat = 44.3167;
-const lon = 28.6;
+const latitude = 44.3167;
+const longitude = 28.6;
 
-// Элементы
-const tempEl = document.getElementById("temp");
-const descEl = document.getElementById("desc");
-const timeEl = document.getElementById("time");
-const widget = document.getElementById("widget");
-
-const sunEl = document.getElementById("sun");
-const cloudEl = document.getElementById("clouds");
-const lightningEl = document.getElementById("lightning");
-
-// Обновление времени
-function updateTime() {
-  const now = new Date();
-  const h = now.getHours().toString().padStart(2,"0");
-  const min = now.getMinutes().toString().padStart(2,"0");
-  const sec = now.getSeconds().toString().padStart(2,"0");
-  timeEl.innerText = `${h}:${min}:${sec}`;
-
-  if(h >= 19 || h < 6) {
-    widget.classList.add("night");
-    if(!document.querySelectorAll(".star").length) createStars(50);
-  } else {
-    widget.classList.remove("night");
-  }
+// Очистка анимаций
+function clearAnimations() {
+  body.className = ''; // убираем все классы
+  const oldCanvas = document.getElementById('weather-canvas');
+  if (oldCanvas) oldCanvas.remove();
 }
 
-// Звёзды ночью
-function createStars(count){
-  for(let i=0;i<count;i++){
-    const star = document.createElement("div");
-    star.className="star";
-    star.style.left=Math.random()*100+"%";
-    star.style.top=Math.random()*100+"%";
-    star.style.animationDuration=(1+Math.random()*2)+"s";
-    widget.appendChild(star);
-  }
+// Создание canvas для анимаций
+function createCanvas() {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'weather-canvas';
+  canvas.style.position = 'fixed';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  canvas.style.pointerEvents = 'none';
+  canvas.style.zIndex = '0';
+  body.appendChild(canvas);
+  return canvas;
 }
 
-// Погода
-function updateWeather(){
-  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
-  .then(r=>r.json())
-  .then(data=>{
-    const temp = Math.round(data.current_weather.temperature);
-    const code = data.current_weather.weathercode;
-
-    tempEl.innerText = temp+"°C";
-
-    sunEl.style.display = cloudEl.style.display = lightningEl.style.display = "none";
-    let desc="Ясно";
-
-    if([1,2,3].includes(code)){
-      desc="Ясно";
-      sunEl.style.display="block";
-    }
-    if([45,48].includes(code)){
-      desc="Облачно";
-      cloudEl.style.display="block";
-    }
-    if([51,53,55,61,63,65,95,96,99].includes(code)){
-      desc="Гроза / дождь";
-      cloudEl.style.display="block";
-      lightningEl.style.display="block";
-      makeRain();
-    }
-    if([71,73,75,77,85,86].includes(code)){
-      desc="Снег";
-      cloudEl.style.display="block";
-      makeSnow();
-    }
-
-    descEl.innerText = desc;
-  });
-}
-
-// Дождь
-function makeRain(){
-  for(let i=0;i<25;i++){
-    const d = document.createElement("div");
-    d.className="rain";
-    d.style.left=Math.random()*100+"%";
-    d.style.animationDuration=(0.5+Math.random())+"s";
-    widget.appendChild(d);
-  }
-}
-
-// Снег
-function makeSnow(){
-  for(let i=0;i<18;i++){
-    const s = document.createElement("div");
-    s.className="snow";
-    s.style.left=Math.random()*100+"%";
-    s.style.animationDuration=(3+Math.random()*3)+"s";
-    widget.appendChild(s);
-  }
-}
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js')
-    .then(() => console.log('Service Worker зарегистрирован'))
-    .catch(err => console.log('Service Worker ошибка:', err));
-}
-
-updateTime();
-setInterval(updateTime,1000);
-updateWeather();
-setInterval(updateWeather,5*60*1000);
-function fetchWeather() {
-  fetch('https://api.open-meteo.com/v1/forecast?latitude=44.3167&longitude=28.6&current_weather=true&temperature_unit=celsius')
-    .then(response => response.json())
+// Основная функция обновления погоды
+function updateWeather() {
+  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&temperature_unit=celsius`)
+    .then(res => res.json())
     .then(data => {
-      document.getElementById('temp').innerText = data.current_weather.temperature + '°C';
-    });
+      if (!data.current_weather) return;
+
+      const temp = data.current_weather.temperature;
+      const code = data.current_weather.weathercode;
+
+      tempEl.innerText = temp + '°C';
+
+      let desc = '';
+      clearAnimations();
+
+      // Ясно
+      if ([0,1,2,3].includes(code)) {
+        desc = 'Ясно';
+        body.style.background = 'linear-gradient(to top, #4facfe, #00f2fe)'; // голубой фон
+        // Можно добавить солнце через CSS
+      }
+      // Облачно
+      else if ([45,48,3].includes(code)) {
+        desc = 'Облачно';
+        body.style.background = 'linear-gradient(to top, #bdc3c7, #2c3e50)';
+      }
+      // Дождь
+      else if ([51,53,55,61,63,65,56,57].includes(code)) {
+        desc = 'Дождь';
+        body.style.background = 'linear-gradient(to top, #4e5d6c, #1c1c1c)';
+        createRain();
+      }
+      // Снег
+      else if ([71,73,75,77].includes(code)) {
+        desc = 'Снег';
+        body.style.background = 'linear-gradient(to top, #a8c0ff, #3f2b96)';
+        createSnow();
+      }
+      // Гроза
+      else if ([95,96,99].includes(code)) {
+        desc = 'Гроза';
+        body.style.background = 'linear-gradient(to top, #2c3e50, #000000)';
+        createRain();
+        // Можно добавить молнии позже
+      }
+      else {
+        desc = 'Облачно';
+        body.style.background = 'linear-gradient(to top, #bdc3c7, #2c3e50)';
+      }
+
+      descEl.innerText = desc;
+    })
+    .catch(err => console.log('Ошибка при запросе погоды:', err));
 }
 
-// первый раз при загрузке
-fetchWeather();
+// ===================== Анимация дождя =====================
+function createRain() {
+  const canvas = createCanvas();
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-// обновляем каждые 10 минут
-setInterval(fetchWeather, 10 * 60 * 1000);
+  const drops = [];
+  for (let i=0;i<200;i++){
+    drops.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      length: Math.random()*20+10,
+      speed: Math.random()*5+4
+    });
+  }
 
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle = 'rgba(174,194,224,0.5)';
+    ctx.lineWidth = 1;
+    ctx.lineCap = 'round';
+    for (let i=0;i<drops.length;i++){
+      const d = drops[i];
+      ctx.beginPath();
+      ctx.moveTo(d.x,d.y);
+      ctx.lineTo(d.x,d.y+d.length);
+      ctx.stroke();
+      d.y += d.speed;
+      if(d.y>canvas.height) d.y = -20;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ===================== Анимация снега =====================
+function createSnow() {
+  const canvas = createCanvas();
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const flakes = [];
+  for (let i=0;i<200;i++){
+    flakes.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: Math.random()*4+1,
+      speed: Math.random()*1+0.5
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    for (let i=0;i<flakes.length;i++){
+      const f = flakes[i];
+      ctx.moveTo(f.x,f.y);
+      ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true);
+    }
+    ctx.fill();
+
+    for (let i=0;i<flakes.length;i++){
+      const f = flakes[i];
+      f.y += f.speed;
+      if(f.y>canvas.height) f.y = -5;
+    }
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ===================== Запуск =====================
+updateWeather(); // сразу при загрузке
+setInterval(updateWeather, 5*60*1000); // каждые 5 минут
