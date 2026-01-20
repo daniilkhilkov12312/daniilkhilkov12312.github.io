@@ -1,47 +1,66 @@
+/* Сброс стилей и общие настройки */
 body {
   margin: 0;
+  padding: 0;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #0c1220;
+  background: #0c1220; /* тёмный фон для контраста */
   font-family: Arial, sans-serif;
 }
 
-.widget {
-  position: relative;
-  width: 300px;
+#widget {
+  width: 280px;
   padding: 20px;
-  border-radius: 18px;
+  border-radius: 15px;
+  background: linear-gradient(180deg, #4facfe, #00f2fe); /* фон по умолчанию */
   color: white;
   text-align: center;
-  overflow: hidden;
-  animation: fadeIn 0.8s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
-.city { font-size: 20px; font-weight: bold; }
-.temp { font-size: 46px; margin: 10px 0; animation: float 3s ease-in-out infinite; }
-.desc { font-size: 14px; opacity: 0.9; }
-.time { font-size: 16px; margin-top: 8px; opacity: 0.9; font-weight: bold; }
+.city {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
-/* ===== ФОНЫ ===== */
-.clear { background: linear-gradient(180deg, #4facfe, #00f2fe); }
-.clouds { background: linear-gradient(180deg, #757f9a, #d7dde8); }
-.rainy { background: linear-gradient(180deg, #314755, #26a0da); }
-.snowy { background: linear-gradient(180deg, #83a4d4, #b6fbff); }
-.night { background: linear-gradient(180deg, #0b0c28, #1a1b3c); }
+#temp {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
 
-/* ===== АНИМАЦИИ ===== */
-@keyframes fadeIn { from { opacity:0; transform: translateY(15px); } to { opacity:1; transform: translateY(0); } }
-@keyframes float { 0%{transform:0}50%{transform:translateY(-8px)}100%{transform:translateY(0)} }
+#desc {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 10px;
+}
 
-/* ===== ДОЖДЬ ===== */
-.rain { position:absolute; top:-20px; width:2px; height:14px; background:rgba(255,255,255,0.6); animation: rainFall linear infinite; }
-@keyframes rainFall { to { transform: translateY(140px); opacity:0; } }
+.coords {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 5px;
+}
 
-/* ===== СНЕГ ===== */
-.snow { position:absolute; top:-10px; width:6px; height:6px; background:white; border-radius:50%; animation:snowFall linear infinite; }
-@keyframes snowFall { to { transform: translateY(140px); } }
+.source a {
+  color: #ffe600;
+  text-decoration: none;
+  font-size: 12px;
+}
 
-/* ===== ЗВЁЗДЫ ===== */
-.star { position:absolute; width:2px; height:2px; background:white; border-radius:50%; opacity:0.8; animation: twinkle 2s infinite
+.source a:hover {
+  text-decoration: underline;
+}
+
+/* Анимация появления температуры */
+#temp {
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
