@@ -8,10 +8,9 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* ===== ВИДЖЕТ ===== */
 .widget {
   position: relative;
-  width: 260px;
+  width: 300px;
   padding: 20px;
   border-radius: 18px;
   color: white;
@@ -20,96 +19,29 @@ body {
   animation: fadeIn 0.8s ease;
 }
 
-/* ===== ТЕКСТ ===== */
-.city {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.temp {
-  font-size: 46px;
-  margin: 10px 0;
-  animation: float 3s ease-in-out infinite;
-}
-
-.desc {
-  font-size: 14px;
-  opacity: 0.9;
-}
+.city { font-size: 20px; font-weight: bold; }
+.temp { font-size: 46px; margin: 10px 0; animation: float 3s ease-in-out infinite; }
+.desc { font-size: 14px; opacity: 0.9; }
+.time { font-size: 16px; margin-top: 8px; opacity: 0.9; font-weight: bold; }
 
 /* ===== ФОНЫ ===== */
-.clear {
-  background: linear-gradient(180deg, #4facfe, #00f2fe);
-}
-
-.clouds {
-  background: linear-gradient(180deg, #757f9a, #d7dde8);
-}
-
-.rainy {
-  background: linear-gradient(180deg, #314755, #26a0da);
-}
-
-.snowy {
-  background: linear-gradient(180deg, #83a4d4, #b6fbff);
-}
+.clear { background: linear-gradient(180deg, #4facfe, #00f2fe); }
+.clouds { background: linear-gradient(180deg, #757f9a, #d7dde8); }
+.rainy { background: linear-gradient(180deg, #314755, #26a0da); }
+.snowy { background: linear-gradient(180deg, #83a4d4, #b6fbff); }
+.night { background: linear-gradient(180deg, #0b0c28, #1a1b3c); }
 
 /* ===== АНИМАЦИИ ===== */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0); }
-}
+@keyframes fadeIn { from { opacity:0; transform: translateY(15px); } to { opacity:1; transform: translateY(0); } }
+@keyframes float { 0%{transform:0}50%{transform:translateY(-8px)}100%{transform:translateY(0)} }
 
 /* ===== ДОЖДЬ ===== */
-.rain {
-  position: absolute;
-  top: -20px;
-  width: 2px;
-  height: 14px;
-  background: rgba(255,255,255,0.6);
-  animation: rainFall linear infinite;
-}
-
-@keyframes rainFall {
-  to { transform: translateY(140px); opacity: 0; }
-}
+.rain { position:absolute; top:-20px; width:2px; height:14px; background:rgba(255,255,255,0.6); animation: rainFall linear infinite; }
+@keyframes rainFall { to { transform: translateY(140px); opacity:0; } }
 
 /* ===== СНЕГ ===== */
-.snow {
-  position: absolute;
-  top: -10px;
-  width: 6px;
-  height: 6px;
-  background: white;
-  border-radius: 50%;
-  animation: snowFall linear infinite;
-}
+.snow { position:absolute; top:-10px; width:6px; height:6px; background:white; border-radius:50%; animation:snowFall linear infinite; }
+@keyframes snowFall { to { transform: translateY(140px); } }
 
-@keyframes snowFall {
-  to { transform: translateY(140px); }
-}
-.night {
-  background: linear-gradient(180deg, #0b0c28, #1a1b3c);
-  overflow: hidden;
-}
-
-.night .star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: twinkle 2s infinite alternate;
-}
-
-@keyframes twinkle {
-  from { opacity: 0.2; }
-  to { opacity: 1; }
-}
+/* ===== ЗВЁЗДЫ ===== */
+.star { position:absolute; width:2px; height:2px; background:white; border-radius:50%; opacity:0.8; animation: twinkle 2s infinite
