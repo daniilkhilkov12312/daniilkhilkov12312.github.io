@@ -1,27 +1,19 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4facfe">
-<meta charset="UTF-8">
-<title>Виджет погоды Нэводари</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Погода в Нэводари</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="weather-widget">
+    <h1>Нэводари</h1>
+    <div class="temperature" id="temp">--°C</div>
+    <div class="description" id="desc">Загрузка...</div>
+    <div class="time" id="time">--:--</div>
+  </div>
 
-<div id="widget">
-  <div class="city">Нэводари</div>
-  <div id="coords">44.3167°N, 28.6°E</div>
-  <div id="temp">--°C</div>
-  <div id="desc">Загрузка...</div>
-  <div id="time">--:--:--</div>
-  
-  <!-- Декорации для анимаций -->
-  <div id="sun" class="sun"></div>
-  <div id="clouds" class="clouds"></div>
-  <div id="lightning" class="lightning"></div>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
